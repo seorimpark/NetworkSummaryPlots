@@ -2,27 +2,30 @@ import numpy as np
 from cycle import *
 from summary import *
 
-def random_sampling_one_par(Gur,listarg):
+# functions needed for summary_par to run
+
+
+def random_sampling_one_par(Gur, listarg):
     """Creates a subsample in adjacency matrix from the graph G. The subsampling is
     done uniformly at random without replacement with the size equal to each element of S.
 
 
     Input: a igraph.Graph object G, a list of sizes S
 
-    
+
     Output: A list of adjacency matrices (in np.ndarray) of the graph G
     """
-    G,s,r=listarg
-    mat=G.get_adjacency()
-    amat=np.array(mat.data)
-    vx=G.vs
-    samp=np.random.choice(np.arange(0,len(vx)),s,False)
-    samp=np.sort(samp)
-    sampmat=amat[np.ix_(samp,samp)]
-    Gur[r]=sampmat
+    G, s, r = listarg
+    samp = np.random.choice(np.arange(len(G.vs)), s, False)
+    gur = G.vs.select(samp)
+    gur2 = G.subgraph(gur)
+    mat = gur2.get_adjacency()
+    sampmat = np.array(mat.data)
+    Gur[r] = sampmat
     return
 
-def network_summary_sub(tk,listarg):
+
+def network_summary_sub(tk, listarg):
     """
     Builds a list tk of number of occurrences for each scale in several subgrpah of a subgraph G
 
@@ -36,15 +39,15 @@ def network_summary_sub(tk,listarg):
 
     Output: a list tk that is an accumulation of the occurrences of the different scales in the explored subgraph
     """
-    G,kmax,r=listarg
-    check=count_case2(G)
-    t2=0
-    if check>0:
-        t2=count_case1(G)/check
-    tk[0,r]=t2
-    kcycle=network_profile(G,kmax)
-    fact=math.factorial(len(G))
-    for k in range(2,kmax):
-        nbK=fact/(2*(k+1)*math.factorial(len(G)-k-1))
-        tk[k-1,r]=(kcycle[k]/nbK)**(1/(k+1))
+    G, kmax, r = listarg
+    check = count_case2(G)
+    t2 = 0
+    if check > 0:
+        t2 = count_case1(G) / check
+    tk[0, r] = t2
+    kcycle = network_profile(G, kmax)
+    fact = math.factorial(len(G))
+    for k in range(2, kmax):
+        nbK = fact / (2 * (k + 1) * math.factorial(len(G) - k - 1))
+        tk[k - 1, r] = (kcycle[k] / nbK) ** (1 / (k + 1))
     return
