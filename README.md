@@ -1,10 +1,6 @@
 # Network summary plots
 
 This is the git repository containing the source code for producing network summary plots out of a generated graph or a given network data. The implementation is coded in python, using the `igraph` library. 
-> To install all the dependencies, do:
-> ```
-> pip3 install -r requirements.txt
-> ```
 
 ## Structure
 
