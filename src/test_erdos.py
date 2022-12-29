@@ -6,19 +6,19 @@ import time
 
 kmax = 7
 alpha = 0.01
-N = 10
+N = 5
 delta = 0.05
 R = math.ceil((1 / 2 / alpha * phi_inv(1 - alpha / (2 * (kmax - 1)))) ** 2)
-size = 100
-p = 0.5
+size = [100]
+p = 0.6
 n = 1000
 
 
 timestart = time.time()
 G = ig.Graph.Erdos_Renyi(n=n, p=p, directed=False, loops=False)
-# slist = sample_number(G,kmax,alpha,N,delta)
-# timemid=time.time()
-tk = Network_summary(G, [size], kmax, alpha)
+size = sample_number(G, kmax, alpha, N, delta)
+timemid = time.time()
+tk = Network_summary(G, size, kmax, alpha)
 timeend = time.time()
 
 # print(timemid-timestart)

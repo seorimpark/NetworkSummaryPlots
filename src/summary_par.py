@@ -54,10 +54,14 @@ alpha = 0.01
 N = 10
 delta = 0.05
 R = math.ceil((1 / 2 / alpha * phi_inv(1 - alpha / (2 * (kmax - 1)))) ** 2)
-size = 100
+size = 2500
 slist = np.full(R, size)
 
-G = ig.Graph.Erdos_Renyi(n=1000, p=0.5, directed=False, loops=False)
+# G = ig.Graph.Erdos_Renyi(n=1000, p=0.5, directed=False, loops=False)
+
+mat2 = scipy.io.mmread("../data/power.mtx")
+M = mat2.toarray()
+G = ig.Graph.Adjacency(M.tolist(), mode="undirected")
 
 if __name__ == "__main__":
     timestart = time.time()
