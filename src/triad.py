@@ -18,26 +18,33 @@ def triadic_closure(G, N):
     vx = G.vs
     ind = 0
     for i in range(N):
-        samp = np.random.choice(np.arange(0, len(vx)), 3, False)
-        e1 = samp[0]
-        e2 = samp[1]
-        e3 = samp[2]
-        p = [(e1, e2), (e2, e3), (e1, e3), (e2, e1), (e3, e2), (e3, e1)]
-        l = G.get_eids(p, error=False)
-        if l.count(-1) == 2:
-            le = []
-            ltest = []
-            # for i in range(6):
-            #     if l[i]!=-1:
-            #         le.append(p[i])
-            #         ltest.append(i)
-            for i in range(6):
-                if l[i] == -1:
-                    a = p[i]
-                else:
-                    le.append(p[i])
-            print(le)
-            print(a)
+        check = 10
+        while check > 2:
+            samp = np.random.choice(np.arange(0, len(vx)), 3, False)
+            e1 = samp[0]
+            e2 = samp[1]
+            e3 = samp[2]
+            p = [(e1, e2), (e2, e3), (e1, e3), (e2, e1), (e3, e2), (e3, e1)]
+            l = G.get_eids(p, error=False)
+            check = l.count(-1)
+        newind = int(np.random.choice(np.arange(0, 2), 1, False))
+        samp_node = samp[newind]
+        samp_wo = np.delete(samp, newind, 0)
+        # print(newind)
+        # print(samp_node)
+        # print(samp_wo)
+        p2 = [
+            (samp_node, samp_wo[0]),
+            (samp_wo[0], samp_node),
+            (samp_node, samp_wo[1]),
+            (samp_wo[1], samp_node),
+        ]
+        l2 = G.get_eids(p2, error=False)
+        # print(l2.count(-1))
+        if l2.count(-1) == 2:
+            for i in range(4):
+                if l2[i] == -1:
+                    a = p2[i]
             G.add_edges([a])
             d = np.random.choice(np.arange(0, len(G.get_edgelist())), 1)
             G.delete_edges(d)
